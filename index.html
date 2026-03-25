@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DJ NISHAL Track Finder</title>
+
+  <style>
+    body {
+      background: black;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+    }
+
+    h1 {
+      color: gold;
+    }
+
+    input, select {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+
+    .track {
+      background: #1a1a1a;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>DJ NISHAL 🔥 Track Finder</h1>
+
+<input type="text" id="search" placeholder="Search track...">
+<select id="genre">
+  <option value="">All</option>
+  <option>Hip Hop</option>
+  <option>Afro</option>
+  <option>EDM</option>
+  <option>Tech House</option>
+</select>
+
+<div id="results"></div>
+
+<script>
+
+const tracks = [
+  {name:"Fergalicious", genre:"Hip Hop", bpm:130},
+  {name:"Turn Me On", genre:"EDM", bpm:128},
+  {name:"Afro Beat Groove", genre:"Afro", bpm:110},
+  {name:"Tech House Vibe", genre:"Tech House", bpm:124},
+  {name:"Titanium", genre:"EDM", bpm:126}
+];
+
+function showTracks(list){
+  let html = "";
+  list.forEach(t=>{
+    html += `
+      <div class="track">
+        <h3>${t.name}</h3>
+        <p>${t.genre}</p>
+        <p>${t.bpm} BPM</p>
+      </div>
+    `;
+  });
+  document.getElementById("results").innerHTML = html;
+}
+
+showTracks(tracks);
+
+document.getElementById("search").oninput = filter;
+document.getElementById("genre").onchange = filter;
+
+function filter(){
+  let s = document.getElementById("search").value.toLowerCase();
+  let g = document.getElementById("genre").value;
+
+  let filtered = tracks.filter(t =>
+    t.name.toLowerCase().includes(s) &&
+    (g==="" || t.genre===g)
+  );
+
+  showTracks(filtered);
+}
+
+</script>
+
+</body>
+</html>
