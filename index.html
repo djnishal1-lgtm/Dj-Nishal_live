@@ -105,33 +105,4 @@ function filter(){
 </script>
 
 </body>
-</html>        <h3>${t.name}</h3>
-        <p>${t.genre}</p>
-        <p>${t.bpm} BPM</p>
-      </div>
-    `;
-  });
-  document.getElementById("results").innerHTML = html;
-}
-
-showTracks(tracks);
-
-document.getElementById("search").oninput = filter;
-document.getElementById("genre").onchange = filter;
-
-function filter(){
-  let s = document.getElementById("search").value.toLowerCase();
-  let g = document.getElementById("genre").value;
-
-  let filtered = tracks.filter(t =>
-    t.name.toLowerCase().includes(s) &&
-    (g==="" || t.genre===g)
-  );
-
-  showTracks(filtered);
-}
-
-</script>
-
-</body>
 </html>
