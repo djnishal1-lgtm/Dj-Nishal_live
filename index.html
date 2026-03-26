@@ -1,107 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DJ Nishal</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: linear-gradient(180deg, #000000, #0a0a0a);
-      color: white;
-      text-align: center;
-    }
+<title>DJ Nishal 🔥 Remix Wall</title>
 
-    h1 {
-      color: gold;
-      font-size: 40px;
-      margin-top: 30px;
-      text-shadow: 0 0 20px gold;
-    }
+<style>
+body {
+  background: #000;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+}
 
-    input, select {
-      padding: 12px;
-      margin: 10px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-    }
+h1 {
+  color: gold;
+  margin-top: 20px;
+}
 
-    .track {
-      background: rgba(255,255,255,0.05);
-      margin: 15px auto;
-      padding: 20px;
-      width: 70%;
-      border-radius: 15px;
-      transition: 0.3s;
-      backdrop-filter: blur(10px);
-    }
+.feed {
+  width: 90%;
+  margin: auto;
+}
 
-    .track:hover {
-      transform: scale(1.03);
-      background: rgba(255,215,0,0.1);
-      box-shadow: 0 0 20px gold;
-    }
-
-    .genre {
-      color: #ff4d4d;
-    }
-
-    .bpm {
-      color: #00ffcc;
-    }
-  </style>
+.track {
+  margin: 20px 0;
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  border-radius: 12px;
+}
+</style>
 </head>
 
 <body>
 
-<h1>DJ NISHAL 🔥 Track Finder</h1>
+<h1>DJ NISHAL 🔥 LIVE REMIX WALL</h1>
 
-<input id="search" placeholder="Search track..." oninput="filter()">
-<select id="genre" onchange="filter()">
-  <option value="">All Genres</option>
-  <option>Hip Hop</option>
-  <option>EDM</option>
-  <option>Afro</option>
-  <option>Tech House</option>
-</select>
+<p>Latest EDM / Big Room / Remix Tracks</p>
 
-<div id="results"></div>
+<div class="feed" id="feed"></div>
 
 <script>
-let tracks = [
-  {name:"Fergalicious", genre:"Hip Hop", bpm:130},
-  {name:"Turn Me On", genre:"EDM", bpm:128},
-  {name:"Afro Beat Groove", genre:"Afro", bpm:110},
-  {name:"Tech House Vibe", genre:"Tech House", bpm:124},
-  {name:"Titanium", genre:"EDM", bpm:126}
-];
+function loadFeed() {
 
-function showTracks(list){
+  let queries = [
+    "big room remix",
+    "edm remix 128 bpm",
+    "festival mashup",
+    "club remix extended",
+    "afro house remix",
+    "twerk remix clean"
+  ];
+
   let html = "";
-  list.forEach(t=>{
+
+  queries.forEach(q => {
     html += `
-    <div class="track">
-      <h3>${t.name}</h3>
-      <p class="genre">${t.genre}</p>
-      <p class="bpm">${t.bpm} BPM</p>
-    </div>`;
+      <div class="track">
+        <h3>${q.toUpperCase()}</h3>
+
+        <iframe width="100%" height="166"
+          scrolling="no"
+          frameborder="no"
+          allow="autoplay"
+          src="https://w.soundcloud.com/player/?url=https://soundcloud.com/search?q=${encodeURIComponent(q)}&color=%23ff5500">
+        </iframe>
+
+      </div>
+    `;
   });
-  document.getElementById("results").innerHTML = html;
+
+  document.getElementById("feed").innerHTML = html;
 }
 
-showTracks(tracks);
-
-function filter(){
-  let s = document.getElementById("search").value.toLowerCase();
-  let g = document.getElementById("genre").value;
-
-  let filtered = tracks.filter(t =>
-    t.name.toLowerCase().includes(s) &&
-    (g=="" || t.genre==g)
-  );
-
-  showTracks(filtered);
-}
+loadFeed();
 </script>
 
 </body>
