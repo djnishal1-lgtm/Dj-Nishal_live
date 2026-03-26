@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>DJ Nishal 🔥 Remix Wall</title>
+<title>DJ Nishal 🔥 PRO Remix Engine</title>
 
 <style>
 body {
-  background: #000;
+  background: radial-gradient(circle, #0a0a0a, #000);
   color: white;
   font-family: Arial;
   text-align: center;
@@ -13,65 +13,168 @@ body {
 
 h1 {
   color: gold;
-  margin-top: 20px;
+  text-shadow: 0 0 20px gold;
 }
 
-.feed {
-  width: 90%;
-  margin: auto;
+.section {
+  margin: 30px auto;
 }
 
 .track {
-  margin: 20px 0;
   background: rgba(255,255,255,0.05);
+  margin: 20px auto;
   padding: 15px;
-  border-radius: 12px;
+  border-radius: 15px;
+  width: 80%;
+  backdrop-filter: blur(10px);
+  transition: 0.3s;
+}
+
+.track:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px gold;
+}
+
+button {
+  margin: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.save { background: gold; }
+.download { background: red; color: white; }
+
+#playlist {
+  margin-top: 40px;
 }
 </style>
+
 </head>
 
 <body>
 
-<h1>DJ NISHAL 🔥 LIVE REMIX WALL</h1>
+<h1>DJ NISHAL 🔥 PRO REMIX ENGINE</h1>
 
-<p>Latest EDM / Big Room / Remix Tracks</p>
+<div class="section">
+<h2>🔥 Trending Today</h2>
+<div id="trending"></div>
+</div>
 
-<div class="feed" id="feed"></div>
+<div class="section">
+<h2>🎧 Live DJ Feed (124–132 BPM)</h2>
+<div id="tracks"></div>
+</div>
+
+<h2>❤️ Saved Playlist</h2>
+<div id="playlist"></div>
 
 <script>
-function loadFeed() {
 
-  let queries = [
-    "big room remix",
-    "edm remix 128 bpm",
-    "festival mashup",
-    "club remix extended",
-    "afro house remix",
-    "twerk remix clean"
-  ];
+// 🎧 YOUR DJ LIST (EDIT THIS ANYTIME)
+const DJ_QUERIES = [
+  "gin and sonic mashup",
+  "denero remix",
+  "festival big room remix",
+  "128 bpm edm edit",
+  "tech house groove remix",
+  "tujamo style remix",
+  "club mashup 2026",
+  "drop united remix",
+  "bootleg remix edm"
+];
 
-  let html = "";
+// 🔥 TRENDING
+const TRENDING = [
+  "viral edm remix 2026",
+  "festival mashup trending",
+  "big room drops 2026"
+];
 
-  queries.forEach(q => {
-    html += `
-      <div class="track">
-        <h3>${q.toUpperCase()}</h3>
-
-        <iframe width="100%" height="166"
-          scrolling="no"
-          frameborder="no"
-          allow="autoplay"
-          src="https://w.soundcloud.com/player/?url=https://soundcloud.com/search?q=${encodeURIComponent(q)}&color=%23ff5500">
-        </iframe>
-
-      </div>
-    `;
-  });
-
-  document.getElementById("feed").innerHTML = html;
+// BPM FILTER
+function isValidBPM(query) {
+  return query.includes("128") || query.includes("130") || query.includes("126") || query.includes("124");
 }
 
-loadFeed();
+// CREATE TRACK CARD
+function createTrack(query) {
+
+  let div = document.createElement("div");
+  div.className = "track";
+
+  let embed = ⁠ https://w.soundcloud.com/player/?url=https://soundcloud.com/search?q=${encodeURIComponent(query)} ⁠;
+
+  div.innerHTML = `
+    <h3>${query.toUpperCase()}</h3>
+
+    <iframe width="100%" height="200"
+    src="${embed}" frameborder="no"></iframe>
+
+    <br>
+
+    <button class="save">❤️ Save</button>
+    <button class="download">⬇️ Download</button>
+  `;
+
+  // SAVE
+  div.querySelector(".save").onclick = () => {
+    let playlist = document.getElementById("playlist");
+
+    let saved = div.cloneNode(true);
+    saved.querySelector(".save").remove();
+
+    playlist.appendChild(saved);
+
+    localStorage.setItem("playlist", playlist.innerHTML);
+  };
+
+  // DOWNLOAD SEARCH
+  div.querySelector(".download").onclick = () => {
+    let search = encodeURIComponent(query + " free download remix");
+    window.open(⁠ https://www.google.com/search?q=${search} ⁠);
+  };
+
+  return div;
+}
+
+// LOAD TRACKS
+function loadTracks() {
+
+  let container = document.getElementById("tracks");
+  container.innerHTML = "";
+
+  DJ_QUERIES.forEach(q => {
+    if (isValidBPM(q) || q.includes("remix")) {
+      container.appendChild(createTrack(q));
+    }
+  });
+
+  // LOAD SAVED
+  let saved = localStorage.getItem("playlist");
+  if (saved) {
+    document.getElementById("playlist").innerHTML = saved;
+  }
+}
+
+// LOAD TRENDING
+function loadTrending() {
+  let container = document.getElementById("trending");
+
+  TRENDING.forEach(q => {
+    container.appendChild(createTrack(q));
+  });
+}
+
+// AUTO REFRESH EVERY 2 MIN
+setInterval(() => {
+  loadTracks();
+}, 120000);
+
+// INIT
+loadTrending();
+loadTracks();
+
 </script>
 
 </body>
