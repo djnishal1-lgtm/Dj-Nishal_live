@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>DJ Nishal 🔥 PRO Remix Engine</title>
+<title>DJ Nishal 🔥 Pro Remix Engine</title>
 
 <style>
 body {
-  background: radial-gradient(circle, #0a0a0a, #000);
+  background: black;
   color: white;
   font-family: Arial;
   text-align: center;
@@ -13,167 +13,86 @@ body {
 
 h1 {
   color: gold;
-  text-shadow: 0 0 20px gold;
-}
-
-.section {
-  margin: 30px auto;
 }
 
 .track {
-  background: rgba(255,255,255,0.05);
   margin: 20px auto;
-  padding: 15px;
-  border-radius: 15px;
   width: 80%;
-  backdrop-filter: blur(10px);
-  transition: 0.3s;
+  padding: 10px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
 }
 
-.track:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 20px gold;
-}
-
-button {
-  margin: 6px;
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-.save { background: gold; }
-.download { background: red; color: white; }
-
-#playlist {
-  margin-top: 40px;
+iframe {
+  border-radius: 10px;
 }
 </style>
-
 </head>
 
 <body>
 
-<h1>DJ NISHAL 🔥 PRO REMIX ENGINE</h1>
+<h1>🔥 DJ NISHAL LIVE FEED</h1>
+<p>Auto Updating Remix Feed (Big Room / EDM)</p>
 
-<div class="section">
-<h2>🔥 Trending Today</h2>
-<div id="trending"></div>
-</div>
-
-<div class="section">
-<h2>🎧 Live DJ Feed (124–132 BPM)</h2>
-<div id="tracks"></div>
-</div>
-
-<h2>❤️ Saved Playlist</h2>
-<div id="playlist"></div>
+<div id="feed"></div>
 
 <script>
 
-// 🎧 YOUR DJ LIST (EDIT THIS ANYTIME)
-const DJ_QUERIES = [
-  "gin and sonic mashup",
-  "denero remix",
-  "festival big room remix",
-  "128 bpm edm edit",
-  "tech house groove remix",
-  "tujamo style remix",
-  "club mashup 2026",
-  "drop united remix",
-  "bootleg remix edm"
+const DJs = [
+  "denero808",
+  "waltry",
+  "ginsonic",
+  "fattony",
+  "karyo",
+  "hayatmusic",
+  "djn9ne",
+  "exeatmusic",
+  "juicyj",
+  "mikis"
 ];
 
-// 🔥 TRENDING
-const TRENDING = [
-  "viral edm remix 2026",
-  "festival mashup trending",
-  "big room drops 2026"
-];
+// 🔥 FETCH RSS FEED
+async function loadFeed() {
 
-// BPM FILTER
-function isValidBPM(query) {
-  return query.includes("128") || query.includes("130") || query.includes("126") || query.includes("124");
-}
+  let container = document.getElementById("feed");
 
-// CREATE TRACK CARD
-function createTrack(query) {
+  for (let dj of DJs) {
 
-  let div = document.createElement("div");
-  div.className = "track";
+    let url = ⁠ https://api.rss2json.com/v1/api.json?rss_url=https://soundcloud.com/${dj}/tracks ⁠;
 
-  let embed = ⁠ https://w.soundcloud.com/player/?url=https://soundcloud.com/search?q=${encodeURIComponent(query)} ⁠;
+    try {
+      let res = await fetch(url);
+      let data = await res.json();
 
-  div.innerHTML = `
-    <h3>${query.toUpperCase()}</h3>
+      data.items.slice(0,2).forEach(track => {
 
-    <iframe width="100%" height="200"
-    src="${embed}" frameborder="no"></iframe>
+        let div = document.createElement("div");
+        div.className = "track";
 
-    <br>
+        let embed = ⁠ https://w.soundcloud.com/player/?url=${track.link} ⁠;
 
-    <button class="save">❤️ Save</button>
-    <button class="download">⬇️ Download</button>
-  `;
+        div.innerHTML = `
+          <h3>${track.title}</h3>
+          <iframe width="100%" height="166"
+          src="${embed}"></iframe>
+        `;
 
-  // SAVE
-  div.querySelector(".save").onclick = () => {
-    let playlist = document.getElementById("playlist");
+        container.appendChild(div);
 
-    let saved = div.cloneNode(true);
-    saved.querySelector(".save").remove();
+      });
 
-    playlist.appendChild(saved);
-
-    localStorage.setItem("playlist", playlist.innerHTML);
-  };
-
-  // DOWNLOAD SEARCH
-  div.querySelector(".download").onclick = () => {
-    let search = encodeURIComponent(query + " free download remix");
-    window.open(⁠ https://www.google.com/search?q=${search} ⁠);
-  };
-
-  return div;
-}
-
-// LOAD TRACKS
-function loadTracks() {
-
-  let container = document.getElementById("tracks");
-  container.innerHTML = "";
-
-  DJ_QUERIES.forEach(q => {
-    if (isValidBPM(q) || q.includes("remix")) {
-      container.appendChild(createTrack(q));
+    } catch(e) {
+      console.log("Error loading", dj);
     }
-  });
 
-  // LOAD SAVED
-  let saved = localStorage.getItem("playlist");
-  if (saved) {
-    document.getElementById("playlist").innerHTML = saved;
   }
+
 }
 
-// LOAD TRENDING
-function loadTrending() {
-  let container = document.getElementById("trending");
+loadFeed();
 
-  TRENDING.forEach(q => {
-    container.appendChild(createTrack(q));
-  });
-}
-
-// AUTO REFRESH EVERY 2 MIN
-setInterval(() => {
-  loadTracks();
-}, 120000);
-
-// INIT
-loadTrending();
-loadTracks();
+// 🔄 AUTO REFRESH EVERY 2 MIN
+setInterval(loadFeed, 120000);
 
 </script>
 
